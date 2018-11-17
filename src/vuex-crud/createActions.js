@@ -6,7 +6,7 @@ const createActions = ({
   parseList,
   parseSingle,
   parseError,
-  resource
+  rootUrl
 }) => {
   const [
     FETCH_LIST,
@@ -28,7 +28,7 @@ const createActions = ({
       fetchList({ commit }, { config, customUrl, customUrlFnArgs = [] } = {}) {
         commit('fetchListStart');
 
-        return client(FETCH_LIST, resource, customUrlFnArgs)
+        return client(FETCH_LIST, rootUrl, customUrlFnArgs)
 
         // return dataProvider.get({ customUrl, customUrlFnArgs, type: FETCH_LIST }, config)
         //   .then((res) => {

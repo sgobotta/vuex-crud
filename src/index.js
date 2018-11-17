@@ -3,6 +3,7 @@ import createActions from './vuex-crud/createActions';
 import createGetters from './vuex-crud/createGetters';
 import createMutations from './vuex-crud/createMutations';
 import createState from './vuex-crud/createState';
+import clientAdapter from './vuex-crud/adapter/restClient'
 
 /**
  * Creates new Vuex CRUD module.
@@ -51,7 +52,6 @@ const createCrud = ({
   mutations = {},
   getters = {},
   client,
-  clientAdapter = {},
   onFetchListStart = () => {},
   onFetchListSuccess = () => {},
   onFetchListError = () => {},
@@ -78,9 +78,6 @@ const createCrud = ({
   if (!resource) {
     throw new Error('Resource name must be specified');
   }
-  if (!client) {
-    throw new Error('A client must be specified');
-  }
 
   let rootUrl;
 
@@ -101,7 +98,7 @@ const createCrud = ({
   }
 
   // Wraps the axios client with the restClient adapter
-  const _clientAdapter = clientAdapter(defaultClient, { rootUrl });
+  const _clientAdapter = clientAdapter(defaultClient);
 
   return {
     namespaced: true,
@@ -115,7 +112,7 @@ const createCrud = ({
       parseList,
       parseSingle,
       parseError,
-      resource
+      rootUrl
     }),
 
     mutations: createMutations({

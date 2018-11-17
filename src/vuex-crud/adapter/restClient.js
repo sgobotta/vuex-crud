@@ -8,7 +8,7 @@ const [
   DESTROY
 ] = ['FETCH_LIST', 'FETCH_SINGLE', 'CREATE', 'UPDATE', 'REPLACE', 'DESTROY'];
 
-const isUsingCustomUrlGetter = rootUrl => typeof rootUrl === 'function';
+const isUsingCustomUrlGetter = typeof rootUrl === 'function';
 
 const urlGetter = ({
   customUrl,
