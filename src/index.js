@@ -50,7 +50,8 @@ const createCrud = ({
   actions = {},
   mutations = {},
   getters = {},
-  client = defaultClient,
+  client,
+  clientAdapter = {},
   onFetchListStart = () => {},
   onFetchListSuccess = () => {},
   onFetchListError = () => {},
@@ -77,6 +78,9 @@ const createCrud = ({
   if (!resource) {
     throw new Error('Resource name must be specified');
   }
+  if (!client) {
+    throw new Error('A client must be specified');
+  }
 
   let rootUrl;
 
@@ -96,6 +100,9 @@ const createCrud = ({
     rootUrl = `/api/${resource}`;
   }
 
+  // Wraps the axios client with the restClient adapter
+  const _clientAdapter = clientAdapter(defaultClient, { rootUrl });
+
   return {
     namespaced: true,
 
@@ -103,12 +110,12 @@ const createCrud = ({
 
     actions: createActions({
       actions,
-      rootUrl,
       only,
-      client,
+      client: _clientAdapter,
       parseList,
       parseSingle,
-      parseError
+      parseError,
+      resource
     }),
 
     mutations: createMutations({
