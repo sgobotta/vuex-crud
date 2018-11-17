@@ -31,6 +31,7 @@ test('creates actions with fetchList method', (t) => {
 
 test('fetchList commits fetchListStart', (t) => {
   const { fetchList } = createActions({
+    customUrl: '/api/articles',
     only: ['FETCH_LIST'],
     client,
     parseList: res => res,

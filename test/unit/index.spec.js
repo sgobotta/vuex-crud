@@ -7,6 +7,8 @@ import * as createActionsObj from '../../src/vuex-crud/createActions';
 import * as createMutationsObj from '../../src/vuex-crud/createMutations';
 import * as createGettersObj from '../../src/vuex-crud/createGetters';
 import clientImpl from '../../src/vuex-crud/client';
+import clientAdapter from '../../src/vuex-crud/adapter/restClient'
+
 
 const createState = createStateObj.default;
 const createActions = createActionsObj.default;
@@ -119,7 +121,7 @@ test('calls createActions with correct arguments', (t) => {
   const spy = sinon.spy(createActionsObj, 'default');
 
   const actions = {};
-  const customClient = () => null;
+  const customClient = clientAdapter(() => null);
   const only = ['FETCH_LIST'];
   const parseList = res => res;
   const parseSingle = res => res;

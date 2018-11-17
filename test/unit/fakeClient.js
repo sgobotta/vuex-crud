@@ -1,4 +1,6 @@
-export default {
+import clientAdapter from './../../src/vuex-crud/adapter/restClient';
+
+export default clientAdapter({
   successResponse: {},
 
   errorResponse: {},
@@ -33,4 +35,4 @@ export default {
   delete() {
     return this.defaultPromise();
   }
-};
+});
