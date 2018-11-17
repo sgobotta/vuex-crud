@@ -1,11 +1,12 @@
+
 const createActions = ({
   actions,
-  rootUrl,
   client,
   only,
   parseList,
   parseSingle,
-  parseError
+  parseError,
+  resource
 }) => {
   const [
     FETCH_LIST,
@@ -16,24 +17,6 @@ const createActions = ({
     DESTROY
   ] = ['FETCH_LIST', 'FETCH_SINGLE', 'CREATE', 'UPDATE', 'REPLACE', 'DESTROY'];
   const crudActions = {};
-  const isUsingCustomUrlGetter = typeof rootUrl === 'function';
-
-  const urlGetter = ({
-    customUrl,
-    customUrlFnArgs,
-    id,
-    type
-  }) => {
-    if (typeof customUrl === 'string') {
-      return customUrl;
-    } else if (isUsingCustomUrlGetter) {
-      const argsArray = Array.isArray(customUrlFnArgs) ? customUrlFnArgs : [customUrlFnArgs];
-      const args = [id || null, type || null].concat(argsArray);
-      return rootUrl(...args);
-    }
-
-    return id ? `${rootUrl}/${id}` : rootUrl;
-  };
 
   if (only.includes(FETCH_LIST)) {
     Object.assign(crudActions, {
@@ -45,21 +28,23 @@ const createActions = ({
       fetchList({ commit }, { config, customUrl, customUrlFnArgs = [] } = {}) {
         commit('fetchListStart');
 
-        return client.get(urlGetter({ customUrl, customUrlFnArgs, type: FETCH_LIST }), config)
-          .then((res) => {
-            const parsedResponse = parseList(res);
+        return client(FETCH_LIST, resource, customUrlFnArgs)
 
-            commit('fetchListSuccess', parsedResponse);
-
-            return parsedResponse;
-          })
-          .catch((err) => {
-            const parsedError = parseError(err);
-
-            commit('fetchListError', parsedError);
-
-            return Promise.reject(parsedError);
-          });
+        // return dataProvider.get({ customUrl, customUrlFnArgs, type: FETCH_LIST }, config)
+        //   .then((res) => {
+        //     const parsedResponse = parseList(res);
+        //
+        //     commit('fetchListSuccess', parsedResponse);
+        //
+        //     return parsedResponse;
+        //   })
+        //   .catch((err) => {
+        //     const parsedError = parseError(err);
+        //
+        //     commit('fetchListError', parsedError);
+        //
+        //     return Promise.reject(parsedError);
+        //   });
       }
     });
   }
