@@ -107,80 +107,83 @@ test('calls get with correct arguments', (t) => {
   const config = { foo: 'bar' };
 
   const commit = sinon.spy();
-  const spy = sinon.spy(client, 'get');
+
+  const spy = sinon.spy(client, 'fetch');
 
   fetchList({ commit }, { config });
 
-  t.true(spy.calledWith('/articles', config));
+  t.true(spy.calledWith('FETCH_LIST', '/articles', {}));
 
-  client.get.restore();
+  client.fetch.restore();
 });
 
-test('fetch list supports customUrl', (t) => {
-  const { fetchList } = createActions({
-    rootUrl: '/articles',
-    only: ['FETCH_LIST'],
-    client,
-    parseList: res => res,
-    parseSingle: res => res,
-    parseError: res => res
-  });
+// Custom Url is not needed anymore
 
-  const config = { foo: 'bar' };
+// test('fetch list supports customUrl', (t) => {
+//   const { fetchList } = createActions({
+//     rootUrl: '/articles',
+//     only: ['FETCH_LIST'],
+//     client,
+//     parseList: res => res,
+//     parseSingle: res => res,
+//     parseError: res => res
+//   });
+//
+//   const config = { foo: 'bar' };
+//
+//   const commit = sinon.spy();
+//   const spy = sinon.spy(client, 'get');
+//
+//   fetchList({ commit }, { config, customUrl: '/custom-articles' });
+//
+//   t.true(spy.calledWith('/custom-articles', config));
+//
+//   client.get.restore();
+// });
 
-  const commit = sinon.spy();
-  const spy = sinon.spy(client, 'get');
+// test('fetch list supports customUrlFnArgs', (t) => {
+//   const { fetchList } = createActions({
+//     rootUrl(id, type, parentId) { return `/users/${parentId}/articles`; },
+//     only: ['FETCH_LIST'],
+//     client,
+//     parseList: res => res,
+//     parseSingle: res => res,
+//     parseError: res => res
+//   });
+//
+//   const config = { foo: 'bar' };
+//
+//   const commit = sinon.spy();
+//   const spy = sinon.spy(client, 'get');
+//
+//   fetchList({ commit }, { config, customUrlFnArgs: '123' });
+//
+//   t.true(spy.calledWith('/users/123/articles', config));
+//
+//   client.get.restore();
+// });
 
-  fetchList({ commit }, { config, customUrl: '/custom-articles' });
-
-  t.true(spy.calledWith('/custom-articles', config));
-
-  client.get.restore();
-});
-
-test('fetch list supports customUrlFnArgs', (t) => {
-  const { fetchList } = createActions({
-    rootUrl(id, type, parentId) { return `/users/${parentId}/articles`; },
-    only: ['FETCH_LIST'],
-    client,
-    parseList: res => res,
-    parseSingle: res => res,
-    parseError: res => res
-  });
-
-  const config = { foo: 'bar' };
-
-  const commit = sinon.spy();
-  const spy = sinon.spy(client, 'get');
-
-  fetchList({ commit }, { config, customUrlFnArgs: '123' });
-
-  t.true(spy.calledWith('/users/123/articles', config));
-
-  client.get.restore();
-});
-
-test('fetch list supports customUrlFnArgs as array', (t) => {
-  const { fetchList } = createActions({
-    rootUrl(id, type, parentId) { return `/users/${parentId}/articles`; },
-    only: ['FETCH_LIST'],
-    client,
-    parseList: res => res,
-    parseSingle: res => res,
-    parseError: res => res
-  });
-
-  const config = { foo: 'bar' };
-
-  const commit = sinon.spy();
-  const spy = sinon.spy(client, 'get');
-
-  fetchList({ commit }, { config, customUrlFnArgs: ['123'] });
-
-  t.true(spy.calledWith('/users/123/articles', config));
-
-  client.get.restore();
-});
+// test('fetch list supports customUrlFnArgs as array', (t) => {
+//   const { fetchList } = createActions({
+//     rootUrl(id, type, parentId) { return `/users/${parentId}/articles`; },
+//     only: ['FETCH_LIST'],
+//     client,
+//     parseList: res => res,
+//     parseSingle: res => res,
+//     parseError: res => res
+//   });
+//
+//   const config = { foo: 'bar' };
+//
+//   const commit = sinon.spy();
+//   const spy = sinon.spy(client, 'get');
+//
+//   fetchList({ commit }, { config, customUrlFnArgs: ['123'] });
+//
+//   t.true(spy.calledWith('/users/123/articles', config));
+//
+//   client.get.restore();
+// });
 
 // Fetch Single
 
@@ -279,82 +282,82 @@ test('calls get with correct arguments', (t) => {
   const config = { foo: 'bar' };
 
   const commit = sinon.spy();
-  const spy = sinon.spy(client, 'get');
+  const spy = sinon.spy(client, 'fetch');
 
   fetchSingle({ commit }, { id, config });
 
-  t.true(spy.calledWith(`/articles/${id}`, config));
+  t.true(spy.calledWith('FETCH_SINGLE', '/articles', { id }));
 
-  client.get.restore();
+  client.fetch.restore();
 });
 
-test('fetch single supports customUrl', (t) => {
-  const { fetchSingle } = createActions({
-    rootUrl: '/articles',
-    only: ['FETCH_SINGLE'],
-    client,
-    parseList: res => res,
-    parseSingle: res => res,
-    parseError: res => res
-  });
+// test('fetch single supports customUrl', (t) => {
+//   const { fetchSingle } = createActions({
+//     rootUrl: '/articles',
+//     only: ['FETCH_SINGLE'],
+//     client,
+//     parseList: res => res,
+//     parseSingle: res => res,
+//     parseError: res => res
+//   });
+//
+//   const config = { foo: 'bar' };
+//
+//   const commit = sinon.spy();
+//   const spy = sinon.spy(client, 'get');
+//
+//   fetchSingle({ commit }, { config, customUrl: '/custom-articles/123' });
+//
+//   t.true(spy.calledWith('/custom-articles/123', config));
+//
+//   client.get.restore();
+// });
 
-  const config = { foo: 'bar' };
-
-  const commit = sinon.spy();
-  const spy = sinon.spy(client, 'get');
-
-  fetchSingle({ commit }, { config, customUrl: '/custom-articles/123' });
-
-  t.true(spy.calledWith('/custom-articles/123', config));
-
-  client.get.restore();
-});
-
-test('fetch single supports customUrlFnArgs', (t) => {
-  const { fetchSingle } = createActions({
-    rootUrl(id, type, parentId) { return `/users/${parentId}/articles/${id}`; },
-    only: ['FETCH_SINGLE'],
-    client,
-    parseList: res => res,
-    parseSingle: res => res,
-    parseError: res => res
-  });
-
-  const id = 123;
-  const config = { foo: 'bar' };
-
-  const commit = sinon.spy();
-  const spy = sinon.spy(client, 'get');
-
-  fetchSingle({ commit }, { id, config, customUrlFnArgs: '456' });
-
-  t.true(spy.calledWith('/users/456/articles/123', config));
-
-  client.get.restore();
-});
-
-test('fetch single supports customUrlFnArgs as array', (t) => {
-  const { fetchSingle } = createActions({
-    rootUrl(id, type, parentId) { return `/users/${parentId}/articles/${id}`; },
-    only: ['FETCH_SINGLE'],
-    client,
-    parseList: res => res,
-    parseSingle: res => res,
-    parseError: res => res
-  });
-
-  const id = 123;
-  const config = { foo: 'bar' };
-
-  const commit = sinon.spy();
-  const spy = sinon.spy(client, 'get');
-
-  fetchSingle({ commit }, { id, config, customUrlFnArgs: ['456'] });
-
-  t.true(spy.calledWith('/users/456/articles/123', config));
-
-  client.get.restore();
-});
+// test('fetch single supports customUrlFnArgs', (t) => {
+//   const { fetchSingle } = createActions({
+//     rootUrl(id, type, parentId) { return `/users/${parentId}/articles/${id}`; },
+//     only: ['FETCH_SINGLE'],
+//     client,
+//     parseList: res => res,
+//     parseSingle: res => res,
+//     parseError: res => res
+//   });
+//
+//   const id = 123;
+//   const config = { foo: 'bar' };
+//
+//   const commit = sinon.spy();
+//   const spy = sinon.spy(client, 'get');
+//
+//   fetchSingle({ commit }, { id, config, customUrlFnArgs: '456' });
+//
+//   t.true(spy.calledWith('/users/456/articles/123', config));
+//
+//   client.get.restore();
+// });
+//
+// test('fetch single supports customUrlFnArgs as array', (t) => {
+//   const { fetchSingle } = createActions({
+//     rootUrl(id, type, parentId) { return `/users/${parentId}/articles/${id}`; },
+//     only: ['FETCH_SINGLE'],
+//     client,
+//     parseList: res => res,
+//     parseSingle: res => res,
+//     parseError: res => res
+//   });
+//
+//   const id = 123;
+//   const config = { foo: 'bar' };
+//
+//   const commit = sinon.spy();
+//   const spy = sinon.spy(client, 'get');
+//
+//   fetchSingle({ commit }, { id, config, customUrlFnArgs: ['456'] });
+//
+//   t.true(spy.calledWith('/users/456/articles/123', config));
+//
+//   client.get.restore();
+// });
 
 // Create
 
@@ -393,6 +396,7 @@ test('create commits createStart', (t) => {
 
 test.cb('create commits createSuccess', (t) => {
   const { create } = createActions({
+    rootUrl: '/articles',
     only: ['CREATE'],
     client,
     parseList: res => res,
@@ -454,83 +458,83 @@ test('calls post with correct arguments', (t) => {
   const config = { foo: 'bar' };
 
   const commit = sinon.spy();
-  const spy = sinon.spy(client, 'post');
+  const spy = sinon.spy(client, 'fetch');
 
   create({ commit }, { data, config });
 
-  t.true(spy.calledWith('/articles', data, config));
+  t.true(spy.calledWith('CREATE', '/articles', { data }));
 
-  client.post.restore();
+  client.fetch.restore();
 });
 
-test('create supports customUrl', (t) => {
-  const { create } = createActions({
-    rootUrl: '/articles',
-    only: ['CREATE'],
-    client,
-    parseList: res => res,
-    parseSingle: res => res,
-    parseError: res => res
-  });
+// test('create supports customUrl', (t) => {
+//   const { create } = createActions({
+//     rootUrl: '/articles',
+//     only: ['CREATE'],
+//     client,
+//     parseList: res => res,
+//     parseSingle: res => res,
+//     parseError: res => res
+//   });
+//
+//   const data = { some: 'data' };
+//   const config = { foo: 'bar' };
+//
+//   const commit = sinon.spy();
+//   const spy = sinon.spy(client, 'post');
+//
+//   create({ commit }, { data, config, customUrl: '/custom-articles' });
+//
+//   t.true(spy.calledWith('/custom-articles', data, config));
+//
+//   client.post.restore();
+// });
 
-  const data = { some: 'data' };
-  const config = { foo: 'bar' };
+// test('create supports customUrlFnArgs', (t) => {
+//   const { create } = createActions({
+//     rootUrl(id, type, parentId) { return `/users/${parentId}/articles`; },
+//     only: ['CREATE'],
+//     client,
+//     parseList: res => res,
+//     parseSingle: res => res,
+//     parseError: res => res
+//   });
+//
+//   const data = { some: 'data' };
+//   const config = { foo: 'bar' };
+//
+//   const commit = sinon.spy();
+//   const spy = sinon.spy(client, 'post');
+//
+//   create({ commit }, { data, config, customUrlFnArgs: '123' });
+//
+//   t.true(spy.calledWith('/users/123/articles', data, config));
+//
+//   client.post.restore();
+// });
 
-  const commit = sinon.spy();
-  const spy = sinon.spy(client, 'post');
-
-  create({ commit }, { data, config, customUrl: '/custom-articles' });
-
-  t.true(spy.calledWith('/custom-articles', data, config));
-
-  client.post.restore();
-});
-
-test('create supports customUrlFnArgs', (t) => {
-  const { create } = createActions({
-    rootUrl(id, type, parentId) { return `/users/${parentId}/articles`; },
-    only: ['CREATE'],
-    client,
-    parseList: res => res,
-    parseSingle: res => res,
-    parseError: res => res
-  });
-
-  const data = { some: 'data' };
-  const config = { foo: 'bar' };
-
-  const commit = sinon.spy();
-  const spy = sinon.spy(client, 'post');
-
-  create({ commit }, { data, config, customUrlFnArgs: '123' });
-
-  t.true(spy.calledWith('/users/123/articles', data, config));
-
-  client.post.restore();
-});
-
-test('create supports customUrlFnArgs as array', (t) => {
-  const { create } = createActions({
-    rootUrl(id, type, parentId) { return `/users/${parentId}/articles`; },
-    only: ['CREATE'],
-    client,
-    parseList: res => res,
-    parseSingle: res => res,
-    parseError: res => res
-  });
-
-  const data = { some: 'data' };
-  const config = { foo: 'bar' };
-
-  const commit = sinon.spy();
-  const spy = sinon.spy(client, 'post');
-
-  create({ commit }, { data, config, customUrlFnArgs: ['123'] });
-
-  t.true(spy.calledWith('/users/123/articles', data, config));
-
-  client.post.restore();
-});
+// test('create supports customUrlFnArgs as array', (t) => {
+//   const { create } = createActions({
+//     rootUrl(id, type, parentId) { return `/users/${parentId}/articles`; },
+//     only: ['CREATE'],
+//     client,
+//     parseList: res => res,
+//     parseSingle: res => res,
+//     parseError: res => res
+//   });
+//
+//   const data = { some: 'data' };
+//   const config = { foo: 'bar' };
+//
+//   const commit = sinon.spy();
+//   const spy = sinon.spy(client, 'post');
+//
+//   create({ commit }, { data, config, customUrlFnArgs: ['123'] });
+//
+//   t.true(spy.calledWith('/users/123/articles', data, config));
+//
+//   client.post.restore();
+// });
 
 // Update
 
@@ -553,6 +557,7 @@ test('creates actions with update method', (t) => {
 
 test('update commits updateStart', (t) => {
   const { update } = createActions({
+    rootUrl: '/articles',
     only: ['UPDATE'],
     client,
     parseList: res => res,
