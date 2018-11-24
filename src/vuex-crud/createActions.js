@@ -17,6 +17,25 @@ const createActions = ({
     DESTROY
   ] = ['FETCH_LIST', 'FETCH_SINGLE', 'CREATE', 'UPDATE', 'REPLACE', 'DESTROY'];
   const crudActions = {};
+  const isUsingCustomUrlGetter = typeof rootUrl === 'function';
+
+  const urlGetter = ({
+    customUrl,
+    customUrlFnArgs,
+    id,
+    type,
+    rootUrl
+  }) => {
+    if (typeof customUrl === 'string') {
+      return customUrl;
+    } else if (isUsingCustomUrlGetter) {
+      const argsArray = Array.isArray(customUrlFnArgs) ? customUrlFnArgs : [customUrlFnArgs];
+      const args = [id || null, type || null].concat(argsArray);
+      return rootUrl(...args);
+    }
+
+    return id ? `${rootUrl}/${id}` : rootUrl;
+  };
 
   if (only.includes(FETCH_LIST)) {
     Object.assign(crudActions, {
@@ -25,26 +44,10 @@ const createActions = ({
        *
        * Fetch list of resources.
        */
-      fetchList({ commit }, { config, customUrl, customUrlFnArgs = [] } = {}) {
+      fetchList({ commit }, { config, customUrl, customUrlFnArgs = {} } = {}) {
         commit('fetchListStart');
 
-        return client(FETCH_LIST, rootUrl, customUrlFnArgs)
-
-        // return dataProvider.get({ customUrl, customUrlFnArgs, type: FETCH_LIST }, config)
-        //   .then((res) => {
-        //     const parsedResponse = parseList(res);
-        //
-        //     commit('fetchListSuccess', parsedResponse);
-        //
-        //     return parsedResponse;
-        //   })
-        //   .catch((err) => {
-        //     const parsedError = parseError(err);
-        //
-        //     commit('fetchListError', parsedError);
-        //
-        //     return Promise.reject(parsedError);
-        //   });
+        return client.fetch(FETCH_LIST, rootUrl, customUrlFnArgs);
       }
     });
   }
@@ -60,30 +63,11 @@ const createActions = ({
         id,
         config,
         customUrl,
-        customUrlFnArgs = []
+        customUrlFnArgs = {}
       } = {}) {
         commit('fetchSingleStart');
 
-        return client.get(urlGetter({
-          customUrl,
-          customUrlFnArgs,
-          type: FETCH_SINGLE,
-          id
-        }), config)
-          .then((res) => {
-            const parsedResponse = parseSingle(res);
-
-            commit('fetchSingleSuccess', parsedResponse);
-
-            return res;
-          })
-          .catch((err) => {
-            const parsedError = parseError(err);
-
-            commit('fetchSingleError', parsedError);
-
-            return Promise.reject(parsedError);
-          });
+        return client.fetch(FETCH_SINGLE, rootUrl, { id, ...customUrlFnArgs });
       }
     });
   }
@@ -103,21 +87,23 @@ const createActions = ({
       } = {}) {
         commit('createStart');
 
-        return client.post(urlGetter({ customUrl, customUrlFnArgs, type: CREATE }), data, config)
-          .then((res) => {
-            const parsedResponse = parseSingle(res);
+        return client.fetch(CREATE, rootUrl, { data, ...customUrlFnArgs });
 
-            commit('createSuccess', parsedResponse);
-
-            return parsedResponse;
-          })
-          .catch((err) => {
-            const parsedError = parseError(err);
-
-            commit('createError', parsedError);
-
-            return Promise.reject(parsedError);
-          });
+        // return client.post(urlGetter({ customUrl, customUrlFnArgs, type: CREATE }), data, config)
+        //   .then((res) => {
+        //     const parsedResponse = parseSingle(res);
+        //
+        //     commit('createSuccess', parsedResponse);
+        //
+        //     return parsedResponse;
+        //   })
+        //   .catch((err) => {
+        //     const parsedError = parseError(err);
+        //
+        //     commit('createError', parsedError);
+        //
+        //     return Promise.reject(parsedError);
+        //   });
       }
     });
   }
