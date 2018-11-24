@@ -3,7 +3,7 @@ import createActions from './vuex-crud/createActions';
 import createGetters from './vuex-crud/createGetters';
 import createMutations from './vuex-crud/createMutations';
 import createState from './vuex-crud/createState';
-import clientAdapter from './vuex-crud/adapter/restClient'
+import clientAdapter from './vuex-crud/adapter/restClient';
 
 /**
  * Creates new Vuex CRUD module.
@@ -148,4 +148,4 @@ export default createCrud;
 /**
  * Export client in case user want's to add interceptors.
  */
-export { defaultClient as client };
+// export { defaultClient as client }; Client export will no longer be needed
