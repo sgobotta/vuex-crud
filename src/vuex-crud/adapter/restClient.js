@@ -73,6 +73,8 @@ export default (client, options = { rootUrl: '' }) => {
         //     return service.patch(params.id, data);
         //   }
         //   return service.update(params.id, params.data);
+      case UPDATE:
+        return client.patch(`${url}/${params.id}`)
         // case UPDATE_MANY:
         //   if (usePatch) {
         //     const data = params.previousData // use diff
