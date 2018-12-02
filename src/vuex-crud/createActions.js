@@ -44,7 +44,11 @@ const createActions = ({
        *
        * Fetch list of resources.
        */
-      fetchList({ commit }, { config, customUrl, customUrlFnArgs = {} } = {}) {
+      fetchList({ commit }, {
+        config,
+        customUrl,
+        customUrlFnArgs = {}
+      } = {}) {
         commit('fetchListStart');
 
         return client.fetch(FETCH_LIST, rootUrl, customUrlFnArgs);
@@ -83,7 +87,7 @@ const createActions = ({
         data,
         config,
         customUrl,
-        customUrlFnArgs = []
+        customUrlFnArgs = {}
       } = {}) {
         commit('createStart');
 
@@ -124,26 +128,28 @@ const createActions = ({
       } = {}) {
         commit('updateStart');
 
-        return client.patch(urlGetter({
-          customUrl,
-          customUrlFnArgs,
-          type: UPDATE,
-          id
-        }), data, config)
-          .then((res) => {
-            const parsedResponse = parseSingle(res);
+        return client.fetch(UPDATE, rootUrl, { id, data });
 
-            commit('updateSuccess', parsedResponse);
-
-            return parsedResponse;
-          })
-          .catch((err) => {
-            const parsedError = parseError(err);
-
-            commit('updateError', parsedError);
-
-            return Promise.reject(parsedError);
-          });
+        // return client.patch(urlGetter({
+        //   customUrl,
+        //   customUrlFnArgs,
+        //   type: UPDATE,
+        //   id
+        // }), data, config)
+        //   .then((res) => {
+        //     const parsedResponse = parseSingle(res);
+        //
+        //     commit('updateSuccess', parsedResponse);
+        //
+        //     return parsedResponse;
+        //   })
+        //   .catch((err) => {
+        //     const parsedError = parseError(err);
+        //
+        //     commit('updateError', parsedError);
+        //
+        //     return Promise.reject(parsedError);
+        //   });
       }
     });
   }
